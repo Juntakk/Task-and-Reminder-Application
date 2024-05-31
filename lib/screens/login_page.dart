@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:task_manager/screens/forgot_password.dart';
 import 'package:task_manager/screens/sign_up.dart';
+import 'package:task_manager/screens/tasks.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key, this.email, this.password});
@@ -31,9 +32,19 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      // Handle successful login
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (ctx) => TasksScreen(),
+        ),
+      );
     } catch (e) {
-      // Handle error
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Error occured"),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -42,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -66,7 +78,11 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SignUpPage()),
+                  MaterialPageRoute(
+                    builder: (context) => SignUpPage(
+                      email: _emailController.text,
+                    ),
+                  ),
                 );
               },
               child: const Text('Sign Up'),

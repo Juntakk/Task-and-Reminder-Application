@@ -15,9 +15,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   void _resetPassword() async {
     try {
       await _auth.sendPasswordResetEmail(email: _emailController.text);
-      // Handle successful password reset
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Email sent"),
+          duration: Duration(seconds: 2),
+        ),
+      );
     } catch (e) {
-      // Handle error
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Error occured"),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 

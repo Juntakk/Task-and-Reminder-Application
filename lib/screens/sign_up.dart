@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:task_manager/screens/login_page.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+  SignUpPage({super.key, this.email});
+
+  String? email;
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -31,7 +33,12 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       );
     } catch (e) {
-      // Handle error
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Error occured"),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -49,6 +56,8 @@ class _SignUpPageState extends State<SignUpPage> {
             TextField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
+              autocorrect: false,
             ),
             TextField(
               controller: _passwordController,
