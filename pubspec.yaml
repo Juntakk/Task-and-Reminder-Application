@@ -1,14 +1,17 @@
 name: task_manager
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
+  sdk: ">=3.2.3 <4.0.0"
 
 dependencies:
+  firebase_auth: ^4.20.0
+  firebase_core: ^2.32.0
   flutter:
     sdk: flutter
+  flutterfire_cli: ^1.0.0
 
 dev_dependencies:
   flutter_test:
