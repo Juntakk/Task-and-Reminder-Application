@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutterfire_cli: ^1.0.0
+  intl: ^0.18.1
   provider: ^6.1.2
 
 dev_dependencies:
@@ -22,3 +23,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - lib/assets/chat.png

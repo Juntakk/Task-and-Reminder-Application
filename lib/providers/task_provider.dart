@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class TaskProvider extends ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class TaskProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  List<DocumentSnapshot> _tasks = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  List<DocumentSnapshot> get tasks => _tasks;
+  List<QueryDocumentSnapshot> _tasks = [];
+
+  List<QueryDocumentSnapshot> get tasks => _tasks;
 
   Future<void> fetchTasks() async {
-    User? user = _auth.currentUser;
+    final User? user = _auth.currentUser;
     if (user != null) {
-      QuerySnapshot querySnapshot = await _firestore
+      final querySnapshot = await _firestore
           .collection('tasks')
           .where('userId', isEqualTo: user.uid)
           .get();
@@ -21,37 +22,24 @@ class TaskProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateTask(String taskId, Map<String, dynamic> newData) async {
-    try {
-      await _firestore.collection('tasks').doc(taskId).update(newData);
-      notifyListeners();
-    } catch (e) {
-      //error message
+  Future<void> addTask(Map<String, dynamic> taskData) async {
+    final User? user = _auth.currentUser;
+    if (user != null) {
+      await _firestore.collection('tasks').add({
+        ...taskData,
+        'userId': user.uid,
+      });
+      await fetchTasks();
     }
+  }
+
+  Future<void> updateTask(String taskId, Map<String, dynamic> taskData) async {
+    await _firestore.collection('tasks').doc(taskId).update(taskData);
+    await fetchTasks();
   }
 
   Future<void> deleteTask(String taskId) async {
-    try {
-      await _firestore.collection('tasks').doc(taskId).delete();
-      _tasks.removeWhere((task) => task.id == taskId);
-      notifyListeners();
-    } catch (e) {
-      //error message
-    }
-  }
-
-  Future<void> addTask(String title, String description, DateTime dueDate,
-      String priority) async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      await _firestore.collection('tasks').add({
-        'title': title,
-        'description': description,
-        'dueDate': dueDate,
-        'priority': priority,
-        'userId': user.uid, // Associate task with the user
-      });
-      notifyListeners();
-    }
+    await _firestore.collection('tasks').doc(taskId).delete();
+    await fetchTasks();
   }
 }
