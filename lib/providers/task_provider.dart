@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:task_manager/main.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class TaskProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,7 +28,7 @@ class TaskProvider with ChangeNotifier {
   Future<void> addTask(Map<String, dynamic> taskData) async {
     final User? user = _auth.currentUser;
     if (user != null) {
-      await _firestore.collection('tasks').add({
+      final newTaskRef = await _firestore.collection('tasks').add({
         ...taskData,
         'userId': user.uid,
       });

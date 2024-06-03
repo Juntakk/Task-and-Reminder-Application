@@ -3,17 +3,29 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/firebase_options.dart';
+import 'package:task_manager/local_notifications.dart';
 import 'package:task_manager/providers/task_provider.dart';
 import 'package:task_manager/screens/auth.dart';
-import 'package:task_manager/screens/splash.dart';
+import 'package:task_manager/screens/load.dart';
 import 'package:task_manager/screens/tasks.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
+
+  await LocalNotifications.init();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const App());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => TaskProvider(),
+      child: const App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -26,15 +38,13 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'FlutterChat',
         theme: ThemeData(
-          appBarTheme: AppBarTheme(
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          primarySwatch: Colors.amber,
         ),
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (ctx, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const SplashScreen();
+              return const LoadScreen();
             }
             if (snapshot.hasData) {
               return const TasksScreen();

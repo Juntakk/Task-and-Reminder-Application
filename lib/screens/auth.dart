@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager/local_notifications.dart';
+import 'package:task_manager/screens/forgot_password.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -163,7 +165,39 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   ),
                 ),
-              )
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ForgotPasswordPage(),
+                    ),
+                  );
+                },
+                child: Text(
+                  "Forgot password ?",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextButton(
+                onPressed: () {
+                  LocalNotifications.showSimpleNotification(
+                    title: "Title",
+                    body: "Body",
+                    payload: "Payload",
+                  );
+                },
+                child: const Text(
+                  "Test notification",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ],
           ),
         ),
