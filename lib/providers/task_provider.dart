@@ -10,10 +10,13 @@ class TaskProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<QueryDocumentSnapshot> _tasks = [];
+  bool isLoading = false;
 
   List<QueryDocumentSnapshot> get tasks => _tasks;
 
   Future<void> fetchTasks() async {
+    isLoading = true;
+
     final User? user = _auth.currentUser;
     if (user != null) {
       final querySnapshot = await _firestore
@@ -22,6 +25,7 @@ class TaskProvider with ChangeNotifier {
           .get();
       _tasks = querySnapshot.docs;
       notifyListeners();
+      isLoading = false;
     }
   }
 

@@ -18,6 +18,7 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   void initState() {
     super.initState();
+    Provider.of<TaskProvider>(context, listen: false).fetchTasks();
   }
 
   //Listen to any notification click
@@ -55,48 +56,49 @@ class _TasksScreenState extends State<TasksScreen> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: taskProvider.fetchTasks(),
-        builder: (context, snapshot) {
-          Widget content;
+      body: Consumer<TaskProvider>(
+        builder: (context, taskProvider, child) {
+          if (taskProvider.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
           if (taskProvider.tasks.isEmpty) {
-            content = const Center(
+            return const Center(
               child: Text(
                 'No tasks found.',
               ),
             );
-          } else {
-            content = ListView.builder(
-              itemCount: taskProvider.tasks.length,
-              itemBuilder: (context, index) {
-                final task = taskProvider.tasks[index];
-                return ListTile(
-                  title: Text(task['title']),
-                  subtitle: Text(task['description']),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () {
-                          showEditTaskDialog(context, task);
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          taskProvider.deleteTask(task.id);
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
           }
 
-          return content;
+          return ListView.builder(
+            itemCount: taskProvider.tasks.length,
+            itemBuilder: (context, index) {
+              final task = taskProvider.tasks[index];
+              return ListTile(
+                title: Text(task['title']),
+                subtitle: Text(task['description']),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        showEditTaskDialog(context, task);
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        taskProvider.deleteTask(task.id);
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(

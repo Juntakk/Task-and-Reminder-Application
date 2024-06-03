@@ -97,9 +97,11 @@ void showEditTaskDialog(BuildContext context, QueryDocumentSnapshot task) {
                                 ))
                             .toList(),
                         onChanged: (value) {
-                          setState(() {
-                            reminderFrequency = value;
-                          });
+                          setState(
+                            () {
+                              reminderFrequency = value;
+                            },
+                          );
                         },
                       ),
                   ],
