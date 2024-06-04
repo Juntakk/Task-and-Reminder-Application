@@ -6,10 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:task_manager/misc/firebase_options.dart';
 import 'package:task_manager/misc/local_notifications.dart';
 import 'package:task_manager/providers/task_provider.dart';
-import 'package:task_manager/screens/auth.dart';
-import 'package:task_manager/screens/load.dart';
-import 'package:task_manager/screens/tasks.dart';
-import 'package:task_manager/screens/settings.dart'; // Import the settings screen
+import 'package:task_manager/screens/auth/auth.dart';
+import 'package:task_manager/screens/misc/load.dart';
+import 'package:task_manager/screens/tasks/tasks.dart';
+import 'package:task_manager/screens/misc/settings.dart'; // Import the settings screen
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 

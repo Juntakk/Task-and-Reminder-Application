@@ -1,5 +1,6 @@
 analyzer:
   errors:
+    library_private_types_in_public_api: ignore
     must_be_immutable: ignore
     unused_import: ignore
     unused_local_variable: ignore

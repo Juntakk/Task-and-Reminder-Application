@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/screens/auth.dart';
+import 'package:task_manager/screens/auth/auth.dart';
 
 class Profile extends StatefulWidget {
   Profile({super.key, required this.user});

@@ -5,9 +5,9 @@ import 'package:task_manager/misc/local_notifications.dart';
 import 'package:task_manager/providers/task_provider.dart';
 import 'package:task_manager/dialogs/add_task_dialog.dart';
 import 'package:task_manager/dialogs/edit_task_dialog.dart';
-import 'package:task_manager/screens/profile.dart';
-import 'package:task_manager/screens/settings.dart';
-import 'package:task_manager/screens/task_details.dart';
+import 'package:task_manager/screens/auth/profile.dart';
+import 'package:task_manager/screens/misc/settings.dart';
+import 'package:task_manager/screens/tasks/task_details.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
