@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:task_manager/local_notifications.dart';
+import 'package:task_manager/misc/local_notifications.dart';
 import 'package:task_manager/providers/task_provider.dart';
 import 'package:task_manager/dialogs/add_task_dialog.dart';
 import 'package:task_manager/dialogs/edit_task_dialog.dart';
+import 'package:task_manager/screens/profile.dart';
+import 'package:task_manager/screens/settings.dart';
 import 'package:task_manager/screens/task_details.dart';
 
 class TasksScreen extends StatefulWidget {
@@ -39,20 +41,54 @@ class _TasksScreenState extends State<TasksScreen> {
   Widget build(BuildContext context) {
     final taskProvider = Provider.of<TaskProvider>(context);
 
+    User user = FirebaseAuth.instance.currentUser!;
+
     return Scaffold(
-      backgroundColor: Colors.amber[800],
       appBar: AppBar(
         title: const Text(
           "Tasks",
         ),
+        automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              switch (value) {
+                case "Profile":
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (ctx) => Profile(
+                        user: user,
+                      ),
+                    ),
+                  );
+                  break;
+                case "Settings":
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (ctx) => const SettingsScreen(),
+                    ),
+                  );
+                  break;
+              }
             },
-            icon: const Icon(
-              Icons.logout,
-            ),
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'Profile',
+                child: ListTile(
+                  leading: Icon(Icons.person_outline_sharp),
+                  title: Text('Profile'),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Settings',
+                child: ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings'),
+                ),
+              ),
+            ],
           ),
         ],
       ),

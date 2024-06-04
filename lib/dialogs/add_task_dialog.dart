@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:task_manager/local_notifications.dart';
 import 'package:task_manager/providers/task_provider.dart';
+import 'package:task_manager/misc/local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -86,9 +86,11 @@ void showAddTaskDialog(BuildContext context) {
                     if (setReminder)
                       ListTile(
                         contentPadding: const EdgeInsets.all(0),
-                        title: Text(reminderStartDate == null
-                            ? 'Select Reminder Start Date'
-                            : 'Reminder Date: ${DateFormat.yMd().format(reminderStartDate!)}'),
+                        title: Text(
+                          reminderStartDate == null
+                              ? 'Reminder Start Date'
+                              : DateFormat.yMd().format(reminderStartDate!),
+                        ),
                         trailing: const Icon(Icons.calendar_today),
                         onTap: () async {
                           final pickedReminderDate = await showDatePicker(
@@ -115,9 +117,11 @@ void showAddTaskDialog(BuildContext context) {
                                 ))
                             .toList(),
                         onChanged: (value) {
-                          setState(() {
-                            reminderFrequency = value;
-                          });
+                          setState(
+                            () {
+                              reminderFrequency = value;
+                            },
+                          );
                         },
                       ),
                   ],
@@ -155,15 +159,12 @@ void showAddTaskDialog(BuildContext context) {
                       reminderFrequency != null) {
                     nextReminderDate = reminderStartDate;
                     while (nextReminderDate!.isBefore(dueDate!)) {
-                      final scheduledDate = tz.TZDateTime.now(tz.local)
-                          .add(const Duration(seconds: 10));
-
                       LocalNotifications.showScheduleNotification(
                         id: notificationId,
                         title: taskData['title'].toString(),
                         body: taskData['description'].toString(),
                         payload: '',
-                        scheduledDate: scheduledDate,
+                        scheduledDate: nextReminderDate as tz.TZDateTime,
                       );
 
                       // Update nextReminderDate based on frequency

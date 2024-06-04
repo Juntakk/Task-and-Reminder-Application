@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/local_notifications.dart';
 import 'package:task_manager/screens/forgot_password.dart';
+import 'package:task_manager/screens/tasks.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -36,30 +36,34 @@ class _AuthScreenState extends State<AuthScreen> {
       });
 
       if (_isLogin) {
-        final userCredentials = await _firebase.signInWithEmailAndPassword(
+        await _firebase.signInWithEmailAndPassword(
           email: _enteredEmail,
           password: _enteredPassword,
         );
       } else {
-        final userCredentials = await _firebase.createUserWithEmailAndPassword(
+        await _firebase.createUserWithEmailAndPassword(
           email: _enteredEmail,
           password: _enteredPassword,
         );
-
         await FirebaseFirestore.instance
             .collection("users")
-            .doc(userCredentials.user!.uid)
+            .doc(_firebase.currentUser!.uid)
             .set({
           "email": _enteredEmail,
         });
       }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const TasksScreen()),
+      );
     } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.message ?? "Authentication failed"),
         ),
       );
+    } finally {
       setState(() {
         _isAuthenticating = false;
       });
@@ -69,7 +73,6 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -174,29 +177,15 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Forgot password ?",
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 20,
                   ),
                 ),
               ),
               const SizedBox(
                 height: 20,
-              ),
-              TextButton(
-                onPressed: () {
-                  LocalNotifications.showSimpleNotification(
-                    title: "Title",
-                    body: "Body",
-                    payload: "Payload",
-                  );
-                },
-                child: const Text(
-                  "Test notification",
-                  style: TextStyle(color: Colors.white),
-                ),
               ),
             ],
           ),

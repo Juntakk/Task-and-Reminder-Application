@@ -34,12 +34,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.inverseSurface,
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Forgot Password',
-          style: TextStyle(color: Colors.white),
         ),
       ),
       body: Padding(
@@ -47,7 +44,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         child: Column(
           children: [
             Card(
-              color: Theme.of(context).colorScheme.inversePrimary,
               margin: const EdgeInsets.only(left: 20, right: 20, top: 200),
               child: Padding(
                 padding: const EdgeInsets.all(32),
