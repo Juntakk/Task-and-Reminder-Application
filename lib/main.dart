@@ -8,8 +8,9 @@ import 'package:task_manager/misc/local_notifications.dart';
 import 'package:task_manager/providers/task_provider.dart';
 import 'package:task_manager/screens/auth/auth.dart';
 import 'package:task_manager/screens/misc/load.dart';
+import 'package:task_manager/screens/misc/splash.dart';
 import 'package:task_manager/screens/tasks/tasks.dart';
-import 'package:task_manager/screens/misc/settings.dart'; // Import the settings screen
+import 'package:task_manager/screens/misc/settings.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -54,18 +55,7 @@ class App extends StatelessWidget {
         title: 'Task Manager',
         theme: theme,
         darkTheme: darkTheme,
-        home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (ctx, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const LoadScreen();
-            }
-            if (snapshot.hasData) {
-              return const TasksScreen();
-            }
-            return const AuthScreen();
-          },
-        ),
+        home: const CustomSplashScreen(),
       ),
     );
   }

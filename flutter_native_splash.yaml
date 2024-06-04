@@ -1,0 +1,6 @@
+flutter_native_splash:
+  color: "#DAC4C4" # Background color of the splash screen
+  image: assets/chat.png # Path to your logo image
+  android: true
+  ios: true
+  web: true
