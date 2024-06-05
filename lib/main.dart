@@ -52,7 +52,7 @@ class App extends StatelessWidget {
       ),
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
-        title: 'Task Manager',
+        title: 'Task and Reminder Application',
         theme: theme,
         darkTheme: darkTheme,
         home: const CustomSplashScreen(),

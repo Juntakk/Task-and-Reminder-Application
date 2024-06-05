@@ -44,7 +44,7 @@ class _ProfileState extends State<Profile> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text("Nah"),
+                child: const Text("No"),
               )
             ],
           );
@@ -64,7 +64,32 @@ class _ProfileState extends State<Profile> {
         ],
       ),
       body: Center(
-        child: Text(widget.user.email.toString()),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 5),
+              child: ListTile(
+                tileColor: Theme.of(context).hoverColor,
+                title: const Text("Email"),
+                subtitle: Text(
+                  widget.user.email.toString(),
+                ),
+                leading: const Icon(Icons.email_outlined),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 5),
+              child: ListTile(
+                tileColor: Theme.of(context).hoverColor,
+                title: const Text("ID"),
+                subtitle: Text(
+                  widget.user.uid,
+                ),
+                leading: const Icon(Icons.numbers_rounded),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -21,10 +21,15 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enteredEmail = "";
   var _enteredPassword = "";
 
+  bool isValidPhoneNumber(String number) {
+    RegExp regExp = RegExp(r'^\d{3}-\d{3}-\d{4}$');
+    return regExp.hasMatch(number);
+  }
+
   void _submit() async {
     final isValid = _form.currentState!.validate();
 
-    if (!isValid || !_isLogin) {
+    if (!isValid) {
       return;
     }
 
@@ -52,18 +57,27 @@ class _AuthScreenState extends State<AuthScreen> {
           "email": _enteredEmail,
         });
       }
-
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const TasksScreen()),
+        MaterialPageRoute(builder: (context) {
+          if (!mounted) return const TasksScreen();
+          return const TasksScreen();
+        }),
+      );
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Successfully registered !"),
+          showCloseIcon: true,
+        ),
       );
     } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(e.message ?? "Authentication failed"),
         ),
       );
-    } finally {
       setState(() {
         _isAuthenticating = false;
       });
@@ -99,6 +113,18 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          _isLogin
+                              ? const Text(
+                                  "Login",
+                                  style: TextStyle(fontSize: 30),
+                                )
+                              : const Text(
+                                  "Register",
+                                  style: TextStyle(fontSize: 30),
+                                ),
+                          const SizedBox(
+                            height: 20,
+                          ),
                           TextFormField(
                             decoration:
                                 const InputDecoration(labelText: "Email"),
@@ -111,7 +137,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                   !value.contains("@")) {
                                 return "Please enter valid email";
                               }
-
                               return null;
                             },
                             onSaved: (newValue) {
@@ -136,33 +161,36 @@ class _AuthScreenState extends State<AuthScreen> {
                           const SizedBox(
                             height: 12,
                           ),
-                          if (_isAuthenticating)
-                            const CircularProgressIndicator(),
-                          if (!_isAuthenticating)
-                            ElevatedButton(
-                              onPressed: _submit,
-                              style: ElevatedButton.styleFrom(
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.primary),
-                              child: Text(
-                                !_isLogin ? "Sign Up" : "Login",
-                              ),
-                            ),
-                          if (!_isAuthenticating)
-                            TextButton(
-                              onPressed: () {
-                                setState(
-                                  () {
-                                    _isLogin = !_isLogin;
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              if (_isAuthenticating)
+                                const CircularProgressIndicator(),
+                              if (!_isAuthenticating)
+                                ElevatedButton(
+                                  onPressed: _submit,
+                                  child: Text(
+                                    !_isLogin ? "Sign Up" : "Login",
+                                    style: const TextStyle(fontSize: 22),
+                                  ),
+                                ),
+                              if (!_isAuthenticating)
+                                TextButton(
+                                  onPressed: () {
+                                    setState(
+                                      () {
+                                        _isLogin = !_isLogin;
+                                      },
+                                    );
                                   },
-                                );
-                              },
-                              child: Text(
-                                _isLogin
-                                    ? "Create an account"
-                                    : "I already have an account",
-                              ),
-                            ),
+                                  child: Text(
+                                    _isLogin
+                                        ? "Create an account"
+                                        : "I already have an account",
+                                  ),
+                                ),
+                            ],
+                          )
                         ],
                       ),
                     ),

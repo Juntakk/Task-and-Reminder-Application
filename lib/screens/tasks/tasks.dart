@@ -23,20 +23,6 @@ class _TasksScreenState extends State<TasksScreen> {
     Provider.of<TaskProvider>(context, listen: false).fetchTasks();
   }
 
-  //Listen to any notification click
-  listenToNotifications() {
-    LocalNotifications.onClickNotification.stream.listen(
-      (event) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TaskDetails(payload: event),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final taskProvider = Provider.of<TaskProvider>(context);
@@ -112,25 +98,51 @@ class _TasksScreenState extends State<TasksScreen> {
             itemCount: taskProvider.tasks.length,
             itemBuilder: (context, index) {
               final task = taskProvider.tasks[index];
-              return ListTile(
-                title: Text(task['title']),
-                subtitle: Text(task['description']),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        showEditTaskDialog(context, task);
-                      },
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                child: ListTile(
+                  tileColor: Theme.of(context).focusColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        taskProvider.deleteTask(task.id);
-                      },
-                    ),
-                  ],
+                  ),
+                  minVerticalPadding: 22,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (contex) => TaskDetails(
+                          task: task,
+                        ),
+                      ),
+                    );
+                  },
+                  title: Text(
+                    task['title'],
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  subtitle: Text(
+                    task['description'],
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () {
+                          showEditTaskDialog(context, task);
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          taskProvider.deleteTask(task.id);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
