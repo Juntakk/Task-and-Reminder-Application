@@ -39,7 +39,7 @@ class TaskDetails extends StatelessWidget {
         title: "Reminder Date",
         subtitle: task?["reminder"] != null
             ? DateFormat.yMd().format(task!["reminder_start_date"].toDate())
-            : "No reminder has been set",
+            : "No reminder set",
         icon: Icons.date_range_outlined,
       ),
       TaskDetail(

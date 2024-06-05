@@ -45,6 +45,13 @@ class _AuthScreenState extends State<AuthScreen> {
           email: _enteredEmail,
           password: _enteredPassword,
         );
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Successfully logged in !"),
+            showCloseIcon: true,
+          ),
+        );
       } else {
         await _firebase.createUserWithEmailAndPassword(
           email: _enteredEmail,
@@ -56,6 +63,13 @@ class _AuthScreenState extends State<AuthScreen> {
             .set({
           "email": _enteredEmail,
         });
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Successfully registered !"),
+            showCloseIcon: true,
+          ),
+        );
       }
       Navigator.pushReplacement(
         context,
@@ -63,13 +77,6 @@ class _AuthScreenState extends State<AuthScreen> {
           if (!mounted) return const TasksScreen();
           return const TasksScreen();
         }),
-      );
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Successfully registered !"),
-          showCloseIcon: true,
-        ),
       );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).clearSnackBars();
